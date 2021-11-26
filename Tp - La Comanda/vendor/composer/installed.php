@@ -37,6 +37,15 @@
             'reference' => '83b609028194aa042ea33b5af2d41a7427de80e6',
             'dev_requirement' => false,
         ),
+        'fpdf/fpdf' => array(
+            'pretty_version' => '1.83.2',
+            'version' => '1.83.2.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../fpdf/fpdf',
+            'aliases' => array(),
+            'reference' => '6aa31c9b70a3aef2a63f79144fec79b62bad4bb0',
+            'dev_requirement' => false,
+        ),
         'guzzlehttp/psr7' => array(
             'pretty_version' => '2.0.0',
             'version' => '2.0.0.0',
@@ -110,12 +119,12 @@
             'dev_requirement' => false,
         ),
         'psr/container' => array(
-            'pretty_version' => '2.0.1',
-            'version' => '2.0.1.0',
+            'pretty_version' => '2.0.2',
+            'version' => '2.0.2.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../psr/container',
             'aliases' => array(),
-            'reference' => '2ae37329ee82f91efadc282cc2d527fd6065a5ef',
+            'reference' => 'c71ecc56dfe541dbd90c5360474fbc405f8d5963',
             'dev_requirement' => false,
         ),
         'psr/http-factory' => array(

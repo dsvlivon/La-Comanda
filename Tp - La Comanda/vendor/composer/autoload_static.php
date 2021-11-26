@@ -67,6 +67,7 @@ class ComposerStaticInit60c80af61612c2223abb362c018cab12
         ),
         'F' => 
         array (
+            'Fpdf\\' => 5,
             'Firebase\\JWT\\' => 13,
             'Fig\\Http\\Message\\' => 17,
             'FastRoute\\' => 10,
@@ -143,6 +144,10 @@ class ComposerStaticInit60c80af61612c2223abb362c018cab12
         'GuzzleHttp\\Psr7\\' => 
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/psr7/src',
+        ),
+        'Fpdf\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/fpdf/fpdf/src/Fpdf',
         ),
         'Firebase\\JWT\\' => 
         array (

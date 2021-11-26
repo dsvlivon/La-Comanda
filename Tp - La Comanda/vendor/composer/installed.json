@@ -120,6 +120,55 @@
             "install-path": "../firebase/php-jwt"
         },
         {
+            "name": "fpdf/fpdf",
+            "version": "1.83.2",
+            "version_normalized": "1.83.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/coreydoughty/Fpdf.git",
+                "reference": "6aa31c9b70a3aef2a63f79144fec79b62bad4bb0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/coreydoughty/Fpdf/zipball/6aa31c9b70a3aef2a63f79144fec79b62bad4bb0",
+                "reference": "6aa31c9b70a3aef2a63f79144fec79b62bad4bb0",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.6.0"
+            },
+            "time": "2021-07-07T10:26:51+00:00",
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "Fpdf\\": "src/Fpdf"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Corey Doughty",
+                    "email": "corey@doughty.ca"
+                }
+            ],
+            "description": "FPDF Composer Wrapper",
+            "homepage": "https://github.com/coreydoughty/Fpdf",
+            "keywords": [
+                "fpdf",
+                "pdf",
+                "wrapper"
+            ],
+            "support": {
+                "issues": "https://github.com/coreydoughty/Fpdf/issues",
+                "source": "https://github.com/coreydoughty/Fpdf/tree/1.83.2"
+            },
+            "install-path": "../fpdf/fpdf"
+        },
+        {
             "name": "guzzlehttp/psr7",
             "version": "2.0.0",
             "version_normalized": "2.0.0.0",
@@ -698,23 +747,23 @@
         },
         {
             "name": "psr/container",
-            "version": "2.0.1",
-            "version_normalized": "2.0.1.0",
+            "version": "2.0.2",
+            "version_normalized": "2.0.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/container.git",
-                "reference": "2ae37329ee82f91efadc282cc2d527fd6065a5ef"
+                "reference": "c71ecc56dfe541dbd90c5360474fbc405f8d5963"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/container/zipball/2ae37329ee82f91efadc282cc2d527fd6065a5ef",
-                "reference": "2ae37329ee82f91efadc282cc2d527fd6065a5ef",
+                "url": "https://api.github.com/repos/php-fig/container/zipball/c71ecc56dfe541dbd90c5360474fbc405f8d5963",
+                "reference": "c71ecc56dfe541dbd90c5360474fbc405f8d5963",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.2.0"
+                "php": ">=7.4.0"
             },
-            "time": "2021-03-24T13:40:57+00:00",
+            "time": "2021-11-05T16:47:00+00:00",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -748,7 +797,7 @@
             ],
             "support": {
                 "issues": "https://github.com/php-fig/container/issues",
-                "source": "https://github.com/php-fig/container/tree/2.0.1"
+                "source": "https://github.com/php-fig/container/tree/2.0.2"
             },
             "install-path": "../psr/container"
         },

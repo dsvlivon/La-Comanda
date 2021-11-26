@@ -11,23 +11,26 @@ class ProductoController extends Producto implements IApiUsable{
         $cantidad = $parametros['cantidad'];
         $precio = $parametros['precio'];
         $tiempo = $parametros['tiempo'];
-        $tipo = $parametros['tipo'];
-
+        $sector = $parametros['sector'];
+        
         // Creamos el Producto
         $x = new Producto();
         $x->descripcion = $descripcion;
         $x->precio = $precio;
         $x->tiempo = $tiempo;
         $x->cantidad = $cantidad;
-        $x->tipo = $tipo;
-        $x->crearProducto();
-
-        $payload = json_encode(array("mensaje" => "Producto creado con exito!"));
-        $x->Mostrar();
-
+        $x->sector = $sector;
+        $x->idSector = Producto::validarIdSector($sector);
+        $r = $x->crearProducto();
+        // $r = 0;// p forzar los estados
+        if($r > 0){
+          $payload = json_encode(array("mensaje" => "Producto creado con exito!"));
+          $x->Mostrar();
+        } else {
+          $payload = json_encode(array("mensaje" => "NO se pudo crear el producto!"));
+        }
         $response->getBody()->write($payload);
-        return $response
-          ->withHeader('Content-Type', 'application/json');
+        return $response->withHeader('Content-Type', 'application/json');
     }
 
     public function TraerUno($request, $response, $args){

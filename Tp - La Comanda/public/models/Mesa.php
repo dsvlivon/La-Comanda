@@ -3,25 +3,19 @@ include_once "Empleado.php";
 
 class Mesa{
     public $id;//AI
-    public $codigo;//(STR) codigo propio 5 "CARACTERES"
     public $estado;//(STR) Enum de estados LIBRE/OCUPADA
-    public $pedido;//(INT) id de obj(Pedido)
     public $mozo;//(INT) id de obj(Empleado)
-    public $encuesta;//(INT) id de obj(encuesta)
-
+   
 
     //region ABM
     public function crearMesa(){
         $objAccesoDatos = AccesoDatos::obtenerInstancia();
-        $consulta = $objAccesoDatos->prepararConsulta("INSERT INTO mesas (codigo, estado, pedido, mozo, encuesta) 
-                                                            VALUES (:codigo, :estado, :pedido, :mozo, :encuesta)");
+        $consulta = $objAccesoDatos->prepararConsulta("INSERT INTO mesas (estado, mozo) 
+                                                            VALUES (:estado, :mozo)");
         // $claveHash = password_hash($this->clave, PASSWORD_DEFAULT);
         
-        $consulta->bindValue(':codigo', $this->codigo, PDO::PARAM_STR);
         $consulta->bindValue(':estado', $this->estado, PDO::PARAM_STR);
-        $consulta->bindValue(':pedido', $this->pedido, PDO::PARAM_INT);
         $consulta->bindValue(':mozo', $this->mozo, PDO::PARAM_INT);
-        $consulta->bindValue(':encuesta', $this->encuesta, PDO::PARAM_INT);
 
         $consulta->execute();
 
@@ -33,7 +27,7 @@ class Mesa{
         $consulta = $objAccesoDatos->prepararConsulta("SELECT * FROM mesas");
         $consulta->execute();
 
-        return $consulta->fetchAll(PDO::FETCH_CLASS, 'Producto');
+        return $consulta->fetchAll(PDO::FETCH_CLASS, 'Mesa');
     }
 
     public static function obtenerUno($id){
@@ -42,20 +36,16 @@ class Mesa{
         $consulta->bindValue(':id', $id, PDO::PARAM_INT);
         $consulta->execute();
 
-        return $consulta->fetchObject('Producto');
+        return $consulta->fetchObject('Mesa');
     }
 
     public static function modificar($id){
         $objAccesoDato = AccesoDatos::obtenerInstancia();
         $consulta = $objAccesoDato->prepararConsulta("UPDATE mesas SET 
-        codigo = :codigo, estado = :estado, pedido = :pedido, mozo = :mozo, encuesta = :encuesta
-        WHERE id = :id");
+        estado = :estado, mozo = :mozo WHERE id = :id");
         
-        $consulta->bindValue(':codigo', $this->codigo, PDO::PARAM_STR);
-        $consulta->bindValue(':estado', $this->estado, PDO::PARAM_INT); //x default
-        $consulta->bindValue(':pedido', $this->pedido, PDO::PARAM_INT);
+        $consulta->bindValue(':estado', $this->estado, PDO::PARAM_INT);
         $consulta->bindValue(':mozo', $this->mozo, PDO::PARAM_INT);
-        $consulta->bindValue(':encuesta', $this->encuesta, PDO::PARAM_STR); //x dafault
         
         $consulta->bindValue(':id', $id, PDO::PARAM_INT);
         $consulta->execute();
@@ -72,11 +62,8 @@ class Mesa{
 
     //region Propias
     function Mostrar(){
-        echo "Codigo: ".$this->codigo."\n";
         echo "Estado: ".$this->estado."\n";
-        echo "Pedido: ".$this->pedido."\n";
         echo "Mozo: ".$this->mozo."\n";
-        echo "Encuesta: ".$this->encuesta."\n";
         echo "-----------------------\n";
     }
 
@@ -91,29 +78,20 @@ class Mesa{
         }
     }
 
-    public static function validarMozo($mozo){
-        echo "id de mozo: ".$mozo."\n"."\n";
+    public static function validarMozo($id){
+        echo "id ingresado: ".$id."\n"."\n";
         
         $lista = Empleado::obtenerTodos();
-        // Empleado::Listar($lista);
         foreach ($lista as $e) {
             // var_dump($e);
-            if($mozo == $e->id){
-                // echo "match!";
-                if($e->tipo == "Mozo" || $e->tipo == "Socio"){
-                    // echo " habilitado!";
+            if($id == $e->id){
+                if($e->idTipo == 3 || $e->idTipo == 0){
                     return TRUE;
                 }
             }
         }
-        echo "no te ubico maestro!";
+        echo "Se requiere un Mozo Valido responsable!\n";
         return FALSE;
-    }
-
-    static function generarCodigo() { 
-        $c = substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, 5);
-        // echo $c;
-        return  $c;
     } 
     //endregion
 }

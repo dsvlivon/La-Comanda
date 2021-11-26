@@ -8,31 +8,23 @@ class MesaController extends Mesa implements IApiUsable{
         $parametros = $request->getParsedBody();
 
         $mozo = $parametros['mozo'];
-        // $codigo = $parametros['codigo'];
-        // $estado = $parametros['estado'];
-        // $pedido = $parametros['pedido'];
-        // $encuesta = $parametros['encuesta'];
-        // $id = $parametros['id'];
-
-        // echo "moso n°: ".$mozo;
-
+        
         // Creamos el Mesa
         $x = new Mesa();
-        if(Mesa::validarMozo($mozo)){ $x->mozo = $mozo; }
-        // else{$x->mozo = 1;}
-        $x->codigo = Mesa::generarCodigo();
-        $x->estado = "Libre";
-        $x->encuesta = NULL;
-        $x->pedido = NULL;
-
-        $x->crearMesa();
-
-        $payload = json_encode(array("mensaje" => "Mesa creado con exito!"));
-        $x->Mostrar();
+        if(Mesa::validarMozo($mozo)){ 
+          $x->mozo = $mozo; 
+          $x->estado = "cerrada";
+          
+          $x->crearMesa();
+          $payload = json_encode(array("mensaje" => "Mesa creado con exito!"));
+          $x->Mostrar();
+        } else {
+          $payload = json_encode(array("mensaje" => "No se pudo crear la Mesa!"));
+        }
+  
 
         $response->getBody()->write($payload);
-        return $response
-          ->withHeader('Content-Type', 'application/json');
+        return $response->withHeader('Content-Type', 'application/json');
     }
 
     public function TraerUno($request, $response, $args){

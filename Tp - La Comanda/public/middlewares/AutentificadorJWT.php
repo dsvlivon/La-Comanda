@@ -6,8 +6,7 @@ class AutentificadorJWT{
     private static $claveSecreta = 'T3sT$JWT';
     private static $tipoEncriptacion = ['HS256'];
 
-    public static function CrearToken($datos)
-    {
+    public static function CrearToken($datos){
         $ahora = time();
         $payload = array(
             'iat' => $ahora,
@@ -20,8 +19,7 @@ class AutentificadorJWT{
         return $retorno;
     }
 
-    public static function VerificarToken($token)
-    {
+    public static function VerificarToken($token){
         if (empty($token)) {
             throw new Exception("El token esta vacio.");
         }
@@ -40,8 +38,7 @@ class AutentificadorJWT{
     }
 
 
-    public static function ObtenerPayLoad($token)
-    {
+    public static function ObtenerPayLoad($token){
         if (empty($token)) {
             throw new Exception("El token esta vacio.");
         }
@@ -52,8 +49,7 @@ class AutentificadorJWT{
         );
     }
 
-    public static function ObtenerData($token)
-    {
+    public static function ObtenerData($token){
         $array = JWT::decode(
             $token,
             self::$claveSecreta,
@@ -62,19 +58,7 @@ class AutentificadorJWT{
         return $array;
     }
 
-    // public static function ValidarTokenSocio($token)
-    // {
-    //     $data = JWT::decode($token,self::$claveSecreta,self::$tipoEncriptacion)->data;
-    //     echo $data["tipo"];
-    //     if($data["tipo"]=="socio"){
-    //         return TRUE;
-    //     } else {
-    //         return FALSE;
-    //     }
-    // }
-
-    private static function Aud()
-    {
+    private static function Aud(){
         $aud = '';
 
         if (!empty($_SERVER['HTTP_CLIENT_IP'])) {

@@ -1,0 +1,713 @@
+{
+	"info": {
+		"_postman_id": "bdfa0e74-b026-424a-8ee5-d9c2898df881",
+		"name": "TP La Comanda",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "1er Sprint",
+			"item": [
+				{
+					"name": "Alta Empleado",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "nombre",
+									"value": "Mariana",
+									"type": "text"
+								},
+								{
+									"key": "clave",
+									"value": "1114",
+									"type": "text"
+								},
+								{
+									"key": "sector",
+									"value": "Mesas",
+									"type": "text"
+								},
+								{
+									"key": "tipo",
+									"value": "Mozo",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:666/public/empleados/alta",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"public",
+								"empleados",
+								"alta"
+							],
+							"query": [
+								{
+									"key": "usuario",
+									"value": "daniel",
+									"disabled": true
+								},
+								{
+									"key": "clave",
+									"value": "romita",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Alta Pedido",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "producto",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "cantidad",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "mesa",
+									"value": "YAk3x",
+									"type": "text"
+								},
+								{
+									"key": "mozo",
+									"value": "6",
+									"type": "text"
+								},
+								{
+									"key": "foto",
+									"type": "file",
+									"src": "/C:/xampp/htdocs/Tp - La Comanda/docs/mesa.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:666/public/pedidos/alta",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"public",
+								"pedidos",
+								"alta"
+							],
+							"query": [
+								{
+									"key": "usuario",
+									"value": "daniel",
+									"disabled": true
+								},
+								{
+									"key": "clave",
+									"value": "romita",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "usuario",
+									"value": "Diego",
+									"type": "text"
+								},
+								{
+									"key": "clave",
+									"value": "romita",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:666/public/login/?usuario=daniel&clave=1114",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"public",
+								"login",
+								""
+							],
+							"query": [
+								{
+									"key": "usuario",
+									"value": "daniel"
+								},
+								{
+									"key": "clave",
+									"value": "1114"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Login JWT",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "id",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "clave",
+							"value": "1114",
+							"type": "text"
+						},
+						{
+							"key": "sector",
+							"value": "Mesas",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "tipo",
+							"value": "Mozo",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:666/public/empleados/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "666",
+					"path": [
+						"public",
+						"empleados",
+						"login"
+					],
+					"query": [
+						{
+							"key": "empleado",
+							"value": "daniel",
+							"disabled": true
+						},
+						{
+							"key": "clave",
+							"value": "11111",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Alta Empleado JWT",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2MzcwMDM4NDUsImV4cCI6MTYzNzIwMzg0NSwiYXVkIjoiZDI5OGJlZTJjZjU4NjhmZWVlMDU0NTYwZjkyNGNjYjEyMTg4MGJmNyIsImRhdGEiOnsiaWQiOiIyIiwibm9tYnJlIjoiUm9taW5hIiwidGlwbyI6IlNvY2lvIn0sImFwcCI6IlRlc3QgSldUIn0.9m4-PVwKbc1OLtd2DuoD3304H7bJ3r6YVh8aZVJdAgU",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "nombre",
+							"value": "Octavio",
+							"type": "text"
+						},
+						{
+							"key": "clave",
+							"value": "1114",
+							"type": "text"
+						},
+						{
+							"key": "sector",
+							"value": "3",
+							"type": "text"
+						},
+						{
+							"key": "tipo",
+							"value": "Bartender",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:666/public/empleados/alta",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "666",
+					"path": [
+						"public",
+						"empleados",
+						"alta"
+					],
+					"query": [
+						{
+							"key": "usuario",
+							"value": "daniel",
+							"disabled": true
+						},
+						{
+							"key": "clave",
+							"value": "romita",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Alta Mesa JWT",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2MzcwMDM4NDUsImV4cCI6MTYzNzIwMzg0NSwiYXVkIjoiZDI5OGJlZTJjZjU4NjhmZWVlMDU0NTYwZjkyNGNjYjEyMTg4MGJmNyIsImRhdGEiOnsiaWQiOiIyIiwibm9tYnJlIjoiUm9taW5hIiwidGlwbyI6IlNvY2lvIn0sImFwcCI6IlRlc3QgSldUIn0.9m4-PVwKbc1OLtd2DuoD3304H7bJ3r6YVh8aZVJdAgU",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "mozo",
+							"value": "6",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:666/public/mesas/alta",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "666",
+					"path": [
+						"public",
+						"mesas",
+						"alta"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Alta Producto JWT",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2MzcwMDU3NzAsImV4cCI6MTYzNzIwNTc3MCwiYXVkIjoiZDI5OGJlZTJjZjU4NjhmZWVlMDU0NTYwZjkyNGNjYjEyMTg4MGJmNyIsImRhdGEiOnsiaWQiOiI0Iiwibm9tYnJlIjoiUGVkcm8iLCJ0aXBvIjoiQ29jaW5lcm8ifSwiYXBwIjoiVGVzdCBKV1QifQ.awhl3wSF0k0s4aae68z2EaHjxZTK_kD0X1iKDLkNP1g",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "descripcion",
+							"value": "Andes 1lt",
+							"type": "text"
+						},
+						{
+							"key": "cantidad",
+							"value": "24",
+							"type": "text"
+						},
+						{
+							"key": "precio",
+							"value": "180",
+							"type": "text"
+						},
+						{
+							"key": "tiempo",
+							"value": "15",
+							"type": "text"
+						},
+						{
+							"key": "tipo",
+							"value": "cerveza",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:666/public/productos/alta",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "666",
+					"path": [
+						"public",
+						"productos",
+						"alta"
+					],
+					"query": [
+						{
+							"key": "usuario",
+							"value": "daniel",
+							"disabled": true
+						},
+						{
+							"key": "clave",
+							"value": "romita",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Alta Pedido JWT",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2MzcwMDU4MDYsImV4cCI6MTYzNzIwNTgwNiwiYXVkIjoiZDI5OGJlZTJjZjU4NjhmZWVlMDU0NTYwZjkyNGNjYjEyMTg4MGJmNyIsImRhdGEiOnsiaWQiOiIxIiwibm9tYnJlIjoiRGllZ28iLCJ0aXBvIjoiU29jaW8ifSwiYXBwIjoiVGVzdCBKV1QifQ.YDUKwp6Qxcy8ZvgDFCm1OAYvyaG7MOou9P57Gju5AvE",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "producto",
+							"value": "4",
+							"type": "text"
+						},
+						{
+							"key": "cantidad",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "mesa",
+							"value": "YAk3x",
+							"type": "text"
+						},
+						{
+							"key": "mozo",
+							"value": "6",
+							"type": "text"
+						},
+						{
+							"key": "foto",
+							"type": "file",
+							"src": "/C:/xampp/htdocs/Tp - La Comanda/docs/mesa.jpg"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:666/public/pedidos/alta",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "666",
+					"path": [
+						"public",
+						"pedidos",
+						"alta"
+					],
+					"query": [
+						{
+							"key": "usuario",
+							"value": "daniel",
+							"disabled": true
+						},
+						{
+							"key": "clave",
+							"value": "romita",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "modificar Copy",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "usuario",
+							"value": "Ricky Fort",
+							"type": "text"
+						},
+						{
+							"key": "id",
+							"value": "1",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:666/public/usuarios/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "666",
+					"path": [
+						"public",
+						"usuarios",
+						""
+					],
+					"query": [
+						{
+							"key": "usuario",
+							"value": "daniel",
+							"disabled": true
+						},
+						{
+							"key": "clave",
+							"value": "romita",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "consultar",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "usuario",
+							"value": "jorge",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "rata",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:666/public/credenciales/?usuarios=algo",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "666",
+					"path": [
+						"public",
+						"credenciales",
+						""
+					],
+					"query": [
+						{
+							"key": "usuarios",
+							"value": "algo"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "borrar",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "usuario",
+							"value": "Octavioxxx",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "id",
+							"value": "1",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:666/public/usuarios/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "666",
+					"path": [
+						"public",
+						"usuarios",
+						""
+					],
+					"query": [
+						{
+							"key": "usuario",
+							"value": "daniel",
+							"disabled": true
+						},
+						{
+							"key": "clave",
+							"value": "romita",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Listar Empleados",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "usuario",
+							"value": "jorge",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:666/public/empleados/?id=4",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "666",
+					"path": [
+						"public",
+						"empleados",
+						""
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "4"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Listar Productos",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": {
+					"raw": "http://localhost:666/public/productos/?tipo=comida",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "666",
+					"path": [
+						"public",
+						"productos",
+						""
+					],
+					"query": [
+						{
+							"key": "tipo",
+							"value": "comida"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

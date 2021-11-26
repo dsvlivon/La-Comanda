@@ -1,0 +1,9 @@
+solo socio crea productos OK 
+solo socio crea empleados OK
+solo socio crea ventas OK
+solo socio crea mesas OK
+
+solo mozo o socio levantan pedidos OK
+solo cocinero cambia estado d comida
+solo bartender cambia estado de tragos y vinos
+solo cervecero cambia estado de cervezas

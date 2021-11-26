@@ -5,47 +5,80 @@ require_once './interfaces/IApiUsable.php';
 class PedidoController extends Pedido implements IApiUsable{
 
     public function CargarUno($request, $response, $args){
+        echo "Pedidos / Alta\n";
         $parametros = $request->getParsedBody();
-        $lista = Array();
+        $fecha = new datetime("now");
+        $foto = $_FILES['foto']; 
 
-        $p1 = new Producto(); //public function Setter($i,$q,$d,$p,$t){
-        $p1->Setter($parametros['producto1'],$parametros['cantidad1'],"","","");
-        array_push($lista, $p1);
-        
-        $p2 = new Producto(); //public function Setter($i,$q,$d,$p,$t){
-        $p2->Setter($parametros['producto2'],$parametros['cantidad2'],"","","");
-        array_push($lista, $p2);
+        if($parametros != NULL){
+          $x = new Pedido();
+          $x->codigo = Pedido::generarCodigo();
+          
+          $p = new Producto(); 
+          $p->id = $parametros['producto'];
+          $p->cantidad = $parametros['cantidad'];
+          if(Pedido::validarProducto($p)){
+            $x->producto = $p->id;
+            $x->cantidad = $p->cantidad;
+            $x->idSector = $p->idSector;
+          };         
+          $x->mesa = $parametros['mesa'];
+          $x->mozo = $parametros['mozo'];
+          $x->demora = 0; // lo cambian cuando van dando el "en prep"
+          $x->fecha = $fecha->format("Y-m-d");
+          if($foto['size'] > 0){
+            $msg = $x->guardarPic($_FILES['foto']);
+          } else $msg = "\n No hay foto disponible!"; 
+          $x->estado = "Pendiente";
 
-        $p3 = new Producto(); //public function Setter($i,$q,$d,$p,$t){
-        $p3->Setter($parametros['producto3'],$parametros['cantidad3'],"","","");
-        array_push($lista, $p3);
-
-        $p4 = new Producto(); //public function Setter($i,$q,$d,$p,$t){
-        $p4->Setter($parametros['producto4'],$parametros['cantidad4'],"","","");
-        array_push($lista, $p4);
-        // Producto::Listar($lista);
-        Pedido::validarLista($lista);
-
-        $mesa = $parametros['mesa'];
-        $mozo = $parametros['mozo'];
-
-        // Creamos el Pedido
-        $x = new Pedido();
-        $x->items = $lista;
-        $x->estado = "Pendiente";
-        $x->mesa = $mesa;
-        $x->mozo = $mozo;
-        $x->demora = Pedido::calcularDemora($lista);
-        $x->monto = Pedido::calcularMonto($lista);
-        $x->crearPedido();
-
-        $payload = json_encode(array("mensaje" => "Pedido creado con exito!"));
-        $x->Mostrar();
-
+          
+          $r = $x->crearPedido();
+          // $r = 0;// p forzar estados
+            if($r > 0){
+              $msg = "Codigo de pedido: ".$x->codigo;
+              $payload = json_encode(array("mensaje" => "Pedido creado con exito!".$msg));
+              // $x->Mostrar();
+            } else {
+              $payload = json_encode(array("Error" => "Faltan datos!".$msg));
+            }
+        } else {
+          $payload = json_encode(array("Error" => "El pedido no se pudo crear!"));
+        }
         $response->getBody()->write($payload);
-        return $response
-          ->withHeader('Content-Type', 'application/json');
+        return $response->withHeader('Content-Type', 'application/json');
     }
+
+    public function AgregarProducto($request, $response, $args){
+      echo "Pedidos / Agregar\n";
+      $parametros = $request->getParsedBody();
+      $codigo = $parametros['codigo'];
+
+      if($parametros != NULL){
+        $x = Pedido::ObtenerUno($codigo);
+        
+        $p = new Producto(); 
+        $p->id = $parametros['producto'];
+        $p->cantidad = $parametros['cantidad'];
+        if(Pedido::validarProducto($p)){
+          $x->producto = $p->id;
+          $x->cantidad = $p->cantidad;
+        };         
+        var_dump($x);
+                
+        $r = $x->crearPedido();
+        // $r = 0;// p forzar estados
+          if($r > 0){
+            $payload = json_encode(array("mensaje" => "Producto agregado con exito!"."Codigo de Pedido: ".$x->codigo));
+            // $x->Mostrar();
+          } else {
+            $payload = json_encode(array("Error" => "Faltan datos!"));
+          }
+      } else {
+        $payload = json_encode(array("Error" => "El producto no se pudo agregar!"));
+      }
+      $response->getBody()->write($payload);
+      return $response->withHeader('Content-Type', 'application/json');
+  }
 
     public function TraerUno($request, $response, $args){
         // Buscamos Pedido por id
@@ -59,7 +92,6 @@ class PedidoController extends Pedido implements IApiUsable{
     }
 
     public function TraerTipo($request, $response, $args){
-      // Buscamos Pedido por Tipo
       $tipo = $args['tipo'];
       $x = Pedido::obtenerTipo($tipo);
       $payload = json_encode($tipo);
@@ -67,7 +99,46 @@ class PedidoController extends Pedido implements IApiUsable{
       $response->getBody()->write($payload);
       return $response
         ->withHeader('Content-Type', 'application/json');
-  }
+    }
+
+    public function TraerPendientes($request, $response, $args){
+      $lista = Pedido::obtenerPendientes();
+
+      // var_dump($lista);
+      if($lista != NULL){
+        $payload = json_encode(array("lista" => $lista));
+      } else {
+        $payload = json_encode(array("Error" => "No hay datos disponibles!"));
+      }
+      $response->getBody()->write($payload);
+      return $response->withHeader('Content-Type', 'application/json');
+    }
+
+    public function TraerPendientesCocina($request, $response, $args){
+      $lista = Pedido::obtenerPendientesCocina();
+
+      // var_dump($lista);
+      if($lista != NULL){
+        $payload = json_encode(array("lista" => $lista));
+      } else {
+        $payload = json_encode(array("Error" => "No hay datos disponibles!"));
+      }
+      $response->getBody()->write($payload);
+      return $response->withHeader('Content-Type', 'application/json');
+    }
+
+    public function TraerPendientesBartender($request, $response, $args){
+      $lista = Pedido::obtenerPendientesBartender();
+
+      // var_dump($lista);
+      if($lista != NULL){
+        $payload = json_encode(array("lista" => $lista));
+      } else {
+        $payload = json_encode(array("Error" => "No hay datos disponibles!"));
+      }
+      $response->getBody()->write($payload);
+      return $response->withHeader('Content-Type', 'application/json');
+    }
 
     public function TraerTodos($request, $response, $args){
         $lista = Pedido::obtenerTodos();
@@ -75,8 +146,7 @@ class PedidoController extends Pedido implements IApiUsable{
         $payload = json_encode(array("listaProducto" => $lista));
 
         $response->getBody()->write($payload);
-        return $response
-          ->withHeader('Content-Type', 'application/json');
+        return $response->withHeader('Content-Type', 'application/json');
     }
     
     public function ModificarUno($request, $response, $args){
@@ -88,14 +158,103 @@ class PedidoController extends Pedido implements IApiUsable{
         $tiempo = $parametros['tiempo'];
         $id = $parametros['id'];
 
+        // $x->demora = Pedido::calcularDemora($lista); esto queda p solo cocinero
+          // $x->monto = Pedido::calcularMonto($lista); y esto p solo Mozo
+
+
         Pedido::modificar($id);
 
         $payload = json_encode(array("mensaje" => "Pedido modificado con exito"));
 
         $response->getBody()->write($payload);
-        return $response
-          ->withHeader('Content-Type', 'application/json');
+        return $response->withHeader('Content-Type', 'application/json');
     }
+
+    public function ActualizarPedido($request, $response, $args){
+      $parametros = $request->getParsedBody();
+
+      $estado = $parametros['estado'];
+      $codigo = $parametros['codigoPedido'];
+      $producto = $parametros['idProducto'];
+      $id = $parametros['idUsuario'];
+      $fecha = new datetime("now");
+
+      $empleado = Empleado::obtenerUno($id);
+      $lista = Pedido::obtenerPorCodigo($codigo);
+      if($empleado != NULL && $lista != NULL){
+        foreach ($lista as $p) {
+          if($producto == $p->producto && $p->idSector == $empleado->idSector){
+            $p->estado = $estado;
+            $p->fecha = $fecha->format("Y-m-d");
+            $p->demora = ((Producto::obtenerUno($producto))->tiempo) * $p->cantidad;
+            $p->modificar();
+            $p->mostrarPedido();
+          }
+        }
+        $payload = json_encode(array("mensaje" => "Pedido modificado con exito"));
+
+      } else {
+        $payload = json_encode(array("mensaje" => "No se pudo modificar el pedido"));
+      }
+      $response->getBody()->write($payload);
+      return $response->withHeader('Content-Type', 'application/json');
+  }
+
+    public function TraerPedido($request, $response, $args){
+      $codigo = $args['codigoPedido'];
+
+      var_dump($codigo);
+      $lista = Pedido::obtenerPorCodigo($codigo);
+      $demoraTotal=0;
+      if($lista != NULL){
+        foreach ($lista as $p) {
+          echo "Item: ".(Producto::obtenerUno($p->producto))->descripcion."\n";
+          echo "Estado: ".$p->estado."\n";
+          $demoraTotal = $demoraTotal + $p->demora;        
+        }
+        $payload = json_encode(array("mensaje" => "Demora: ".$demoraTotal." minutos"));
+      } else { 
+        $payload = json_encode(array("mensaje" => "Estamos trabajando en su pedido. Aguarde un momento..."));
+      }
+      // $x->demora = Pedido::calcularDemora($lista); esto queda p solo cocinero     
+
+      $response->getBody()->write($payload);
+      return $response->withHeader('Content-Type', 'application/json');
+    }
+
+  //   public function TraerUno($request, $response, $args){
+  //     // Buscamos CriptoMoneda por id
+  //     $x = $args['id'];
+  //     $obj = CriptoMoneda::obtenerUno($x);
+  //     if($obj != NULL){
+  //       $payload = json_encode($obj);
+  //     } else {
+  //       $payload = json_encode(array("error" => "No hay datos!"));
+  //     }
+
+  //     $response->getBody()->write($payload);
+  //     return $response->withHeader('Content-Type', 'application/json');
+  // }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     public function BorrarUno($request, $response, $args){
         $parametros = $request->getParsedBody();
