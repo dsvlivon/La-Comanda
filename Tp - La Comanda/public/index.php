@@ -11,6 +11,7 @@ require_once './controllers/EmpleadoController.php';
 require_once './controllers/ProductoController.php';
 require_once './controllers/MesaController.php';
 require_once './controllers/PedidoController.php';
+require_once './controllers/EncuestaController.php';
 
 require_once './db/AccesoDatos.php';
 require_once './middlewares/AutentificadorJWT.php';
@@ -40,6 +41,9 @@ $app->group('/productos', function (RouteCollectorProxy $group) {
 
 $app->group('/mesas', function (RouteCollectorProxy $group) {
   $group->post('[/alta]', \MesaController::class . ':CargarUno')->add(MWAccesos::class . ':soloSocio'); 
+  $group->put('/actualizarMesa', \MesaController::class. ':actualizarMesa')->add(MWAccesos::class. ':soloMozo');
+  $group->put('/cerrarMesa', \MesaController::class. ':cerrarMesa')->add(MWAccesos::class. ':soloSocio');
+  $group->get('/listarMesas',\MesaController::class. ':TraerTodos')->add(MWAccesos::class. ':soloSocio');
 });
 
 $app->group('/clientes', function (RouteCollectorProxy $group){
@@ -48,19 +52,25 @@ $app->group('/clientes', function (RouteCollectorProxy $group){
 });
 
 $app->group('/pedidos', function (RouteCollectorProxy $group) {
-  $group->get('/listarPendientes', \PedidoController::class . ':TraerTodos')->add(MWAccesos::class. ':soloSocio');
+  $group->get('/listarPendientes', \PedidoController::class . ':TraerPendientes')->add(MWAccesos::class. ':soloSocio');
+
+  $group->get('/revisarListos', \PedidoController::class. ':servirListos')->add(MWAccesos::class. ':soloMozo');
 
   $group->get('/pendientesCocina', \PedidoController::class . ':TraerPendientesCocina')->add(MWAccesos::class. ':soloCocinero');
-  $group->get('/pendientesBartender', \PedidoController::class . ':TraerPendientesBartender')->add(MWAccesos::class. ':soloBartender');
-
   $group->put('/actualizarPedidoCocina', \PedidoController::class. ':ActualizarPedido')->add(MWAccesos::class. ':soloCocinero');
-  $group->put('/actualizarPedidoCandyBar', \PedidoController::class. ':ActualizarPedido')->add(MWAccesos::class. ':soloCocinero');
   
-  $group->put('/actualizarPedidoCervezas', \PedidoController::class. ':ActualizarPedido')->add(MWAccesos::class. ':soloBartender');
-  $group->put('/actualizarPedidoTragos', \PedidoController::class. ':ActualizarPedido')->add(MWAccesos::class. ':soloBartender');
+  $group->get('/pendientesBartender', \PedidoController::class . ':TraerPendientesBartender')->add(MWAccesos::class. ':soloBartender');
+  $group->put('/actualizarPedidoBartender', \PedidoController::class. ':ActualizarPedido')->add(MWAccesos::class. ':soloBartender');
 
+  
+  
   $group->post('/agregar', \PedidoController::class . ':AgregarProducto')->add(MWAccesos::class . ':soloSocio_Mozo');
   $group->post('/alta', \PedidoController::class . ':CargarUno')->add(MWAccesos::class . ':soloSocio_Mozo');
+});
+
+$app->group('/encuestas', function (RouteCollectorProxy $group) {
+  $group->post('/alta', \EncuestaController::class . ':CargarUno');
+  $group->get('/mejoresComentarios', \EncuestaController::class . ':obtenerMejoresComentarios')->add(MWAccesos::class. ':soloSocio');
 });
 
 // $app->group('/ventas', function (RouteCollectorProxy $group) {

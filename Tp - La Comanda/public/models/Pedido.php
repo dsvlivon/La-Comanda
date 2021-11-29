@@ -14,13 +14,14 @@ class Pedido {
     public $demora;//(INT) value mins
     public $fecha;
     public $foto;
+    public $idEstado;
     public $estado;    
 
     //region ABM
     public function crearPedido(){
         $objAccesoDatos = AccesoDatos::obtenerInstancia();
-        $consulta = $objAccesoDatos->prepararConsulta("INSERT INTO pedidos (codigo, producto, idSector, cantidad, mesa, mozo, demora, fecha, foto, estado)
-        VALUES (:codigo, :producto, :idSector, :cantidad, :mesa, :mozo, :demora, :fecha, :foto, :estado)");
+        $consulta = $objAccesoDatos->prepararConsulta("INSERT INTO pedidos (codigo, producto, idSector, cantidad, mesa, mozo, demora, fecha, foto, estado, idEstado)
+        VALUES (:codigo, :producto, :idSector, :cantidad, :mesa, :mozo, :demora, :fecha, :foto, :estado, idEstado)");
         $consulta->bindValue(':codigo', $this->codigo, PDO::PARAM_STR);
         $consulta->bindValue(':producto', $this->producto, PDO::PARAM_INT);
         $consulta->bindValue(':cantidad', $this->cantidad, PDO::PARAM_INT);
@@ -30,7 +31,9 @@ class Pedido {
         $consulta->bindValue(':fecha', $this->fecha, PDO::PARAM_STR);
         $consulta->bindValue(':foto', $this->foto, PDO::PARAM_STR);
         $consulta->bindValue(':estado', $this->estado, PDO::PARAM_STR);
+        $consulta->bindValue(':idEstado', $this->idEstado, PDO::PARAM_INT);        
         $consulta->bindValue(':idSector', $this->idSector, PDO::PARAM_INT);
+        
         $consulta->execute();
         
         return $objAccesoDatos->obtenerUltimoId();
@@ -39,7 +42,7 @@ class Pedido {
     public function modificar(){
         $objAccesoDato = AccesoDatos::obtenerInstancia();
         $consulta = $objAccesoDato->prepararConsulta("UPDATE pedidos 
-        SET producto = :producto, cantidad = :cantidad, mesa = :mesa, mozo = :mozo, demora = :demora, fecha = :fecha, foto = :foto, estado = :estado
+        SET producto = :producto, cantidad = :cantidad, mesa = :mesa, mozo = :mozo, demora = :demora, fecha = :fecha, foto = :foto, estado = :estado, idEstado = :idEstado
         WHERE numero = :numero");
  
         //  $consulta->bindValue(':codigo', $this->codigo, PDO::PARAM_STR);
@@ -51,6 +54,7 @@ class Pedido {
         $consulta->bindValue(':fecha', $this->fecha, PDO::PARAM_STR);
         $consulta->bindValue(':foto', $this->foto, PDO::PARAM_STR);
         $consulta->bindValue(':estado', $this->estado, PDO::PARAM_STR);
+        $consulta->bindValue(':idEstado', $this->idEstado, PDO::PARAM_INT);
 
         $consulta->bindValue(':numero', $this->numero, PDO::PARAM_INT);
         $consulta->execute();
@@ -69,24 +73,6 @@ class Pedido {
     public static function obtenerTodos(){
         $objAccesoDatos = AccesoDatos::obtenerInstancia();
         $consulta = $objAccesoDatos->prepararConsulta("SELECT * FROM pedidos");
-        $consulta->execute();
-
-        return $consulta->fetchAll(PDO::FETCH_CLASS, 'Pedido');
-    }
-
-    public static function obtenerPendientesCocina(){
-        $objAccesoDatos = AccesoDatos::obtenerInstancia();
-        $query = "SELECT * FROM pedidos WHERE pedidos.idSector = 3 OR pedidos.idSector = 4 AND pedidos.estado = 'Pendiente'";
-        $consulta = $objAccesoDatos->prepararConsulta($query);
-        $consulta->execute();
-
-        return $consulta->fetchAll(PDO::FETCH_CLASS, 'Pedido');
-    }
-
-    public static function obtenerPendientesBartender(){
-        $objAccesoDatos = AccesoDatos::obtenerInstancia();
-        $query = "SELECT * FROM pedidos WHERE pedidos.idSector = 1 OR pedidos.idSector = 2 AND pedidos.estado = 'Pendiente'";
-        $consulta = $objAccesoDatos->prepararConsulta($query);
         $consulta->execute();
 
         return $consulta->fetchAll(PDO::FETCH_CLASS, 'Pedido');
@@ -111,9 +97,39 @@ class Pedido {
         return $consulta->fetchAll(PDO::FETCH_CLASS, 'Pedido');
     }
 
-    public static function obtenerPendientes(){
+    public static function obtenerUnoPorCodigo($codigo){
         $objAccesoDatos = AccesoDatos::obtenerInstancia();
-        $query = "SELECT * FROM pedidos WHERE pedidos.estado = 'Pendiente'";
+        $query = "SELECT * FROM pedidos WHERE pedidos.codigo = :codigo";
+        $consulta = $objAccesoDatos->prepararConsulta($query);
+        $consulta->bindValue(':codigo', $codigo, PDO::PARAM_STR);
+        $consulta->execute();
+
+        return $consulta->fetchObject('Pedido');
+    }
+
+    public static function obtenerPorEstado($estado){
+        $objAccesoDatos = AccesoDatos::obtenerInstancia();
+        $query = "SELECT * FROM pedidos WHERE pedidos.idEstado = :estado GROUP BY pedidos.codigo";
+        $consulta = $objAccesoDatos->prepararConsulta($query);
+        $consulta->bindValue(':estado', $estado, PDO::PARAM_STR);
+        
+        $consulta->execute();
+
+        return $consulta->fetchAll(PDO::FETCH_CLASS, 'Pedido');
+    }
+
+    public static function obtenerPendientesCocina(){
+        $objAccesoDatos = AccesoDatos::obtenerInstancia();
+        $query = "SELECT * FROM pedidos WHERE pedidos.idSector = 3 OR pedidos.idSector = 4 AND pedidos.estado = 'Pendiente'";
+        $consulta = $objAccesoDatos->prepararConsulta($query);
+        $consulta->execute();
+
+        return $consulta->fetchAll(PDO::FETCH_CLASS, 'Pedido');
+    }
+
+    public static function obtenerPendientesBartender(){
+        $objAccesoDatos = AccesoDatos::obtenerInstancia();
+        $query = "SELECT * FROM pedidos WHERE pedidos.idSector = 1 OR pedidos.idSector = 2 AND pedidos.estado = 'Pendiente'";
         $consulta = $objAccesoDatos->prepararConsulta($query);
         $consulta->execute();
 
@@ -193,5 +209,37 @@ class Pedido {
         return $monto;
     }
 
+    public static function validarEstado($x){   
+        switch ($x) {
+            case "Pendiente":
+                return 0; 
+                break;
+            case "En preparacion":
+                return 1; 
+                break;
+            case "Listo para servir":
+                return 2; 
+                break;
+            case "Completado":
+                return 3; 
+                break;
+            default:
+                return 9;
+                break;
+        }
+    }
     //endregion
 }
+
+
+
+
+//DEPRECADO
+// public static function obtenerPendientes(){
+    //     $objAccesoDatos = AccesoDatos::obtenerInstancia();
+    //     $query = "SELECT * FROM pedidos WHERE pedidos.idEstado = 0 GROUP BY pedidos.codigo";
+    //     $consulta = $objAccesoDatos->prepararConsulta($query);
+    //     $consulta->execute();
+
+    //     return $consulta->fetchAll(PDO::FETCH_CLASS, 'Pedido');
+    // }

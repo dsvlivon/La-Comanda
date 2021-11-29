@@ -92,5 +92,27 @@ class MWAccesos{
         }
         return $response->withHeader('Content-Type', 'application/json');
     }
+
+    public function soloMozo(Request $request, RequestHandler $handler){
+        $header = $request->getHeaderLine('authorization');
+        $response = new Response();
+        if (!empty($header)) {
+            $token = trim(explode("Bearer", $header)[1]);
+            // var_dump($token);
+            $data = AutentificadorJWT::ObtenerData($token);
+            if ($data->tipo == "Mozo") {
+                echo $data->tipo." Autorizado\n";
+                $response = $handler->handle($request);
+            } else {
+                // echo "NO Autorizado";
+                $response->getBody()->write(json_encode(array("error" => "Solo los Mozos estan habilitados")));
+                $response = $response->withStatus(401);
+            }
+        } else {
+            $response->getBody()->write(json_encode(array("error" => "Falta ingresar el token")));
+            $response = $response->withStatus(401);
+        }
+        return $response->withHeader('Content-Type', 'application/json');
+    }
 }
 

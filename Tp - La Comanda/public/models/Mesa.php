@@ -5,17 +5,18 @@ class Mesa{
     public $id;//AI
     public $estado;//(STR) Enum de estados LIBRE/OCUPADA
     public $mozo;//(INT) id de obj(Empleado)
-   
+    public $idEstado;
 
     //region ABM
     public function crearMesa(){
         $objAccesoDatos = AccesoDatos::obtenerInstancia();
-        $consulta = $objAccesoDatos->prepararConsulta("INSERT INTO mesas (estado, mozo) 
-                                                            VALUES (:estado, :mozo)");
+        $consulta = $objAccesoDatos->prepararConsulta("INSERT INTO mesas (idEstado, estado, mozo) 
+                                                            VALUES (:idEstdo, :estado, :mozo)");
         // $claveHash = password_hash($this->clave, PASSWORD_DEFAULT);
         
         $consulta->bindValue(':estado', $this->estado, PDO::PARAM_STR);
         $consulta->bindValue(':mozo', $this->mozo, PDO::PARAM_INT);
+        $consulta->bindValue(':idEstado', $this->idEstado, PDO::PARAM_INT);
 
         $consulta->execute();
 
@@ -39,15 +40,16 @@ class Mesa{
         return $consulta->fetchObject('Mesa');
     }
 
-    public static function modificar($id){
+    public function modificar(){
         $objAccesoDato = AccesoDatos::obtenerInstancia();
         $consulta = $objAccesoDato->prepararConsulta("UPDATE mesas SET 
-        estado = :estado, mozo = :mozo WHERE id = :id");
+        idEstado = :idEstado, estado = :estado, mozo = :mozo WHERE id = :id");
         
         $consulta->bindValue(':estado', $this->estado, PDO::PARAM_INT);
         $consulta->bindValue(':mozo', $this->mozo, PDO::PARAM_INT);
+        $consulta->bindValue(':idEstado', $this->idEstado, PDO::PARAM_INT);
         
-        $consulta->bindValue(':id', $id, PDO::PARAM_INT);
+        $consulta->bindValue(':id', $this->id, PDO::PARAM_INT);
         $consulta->execute();
     }
 
@@ -93,5 +95,26 @@ class Mesa{
         echo "Se requiere un Mozo Valido responsable!\n";
         return FALSE;
     } 
+
+    public static function validarEstado($x){       
+        
+        switch ($x) {
+            case "con cliente esperando pedido":
+                return 1; 
+                break;
+            case "con cliente comiendo":
+                return 2; 
+                break;
+            case "con cliente pagando":
+                return 3; 
+                break;
+            case "cerrada":
+                return 0; 
+                break;
+            default:
+                return 9;
+                break;
+        }
+    }
     //endregion
 }
